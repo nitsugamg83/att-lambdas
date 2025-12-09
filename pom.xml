@@ -1,153 +1,240 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.6</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.att</groupId>
-	<artifactId>ms-lambdas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-lambdas</name>
-	<description>Lambdas project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
-	<properties>
-		<java.version>21</java.version>
-		<spring-cloud.version>2025.0.0</spring-cloud.version>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-		</dependency>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.8.14</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-dependencies</artifactId>
-				<version>${spring-cloud.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+  <!-- Parent Spring Boot -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.3.5</version>
+    <relativePath/>
+  </parent>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>${lombok.version}</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.4</version>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.12</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<excludes>
-						<exclude>**/MsTemplateApplication.class</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+  <groupId>com.mx.att.digital</groupId>
+  <artifactId>ms-identity-orchestration-web</artifactId>
+  <version>1.0.0</version>
+  <name>ms-identity-orchestration-web</name>
+  <description>Identity Orchestration Web API used by the biometric identity web portal</description>
 
+  <properties>
+    <java.version>21</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <jacoco.minimum.coverage>0.80</jacoco.minimum.coverage>
+  </properties>
+
+  <!-- ==== Gestionar versiones de librerías externas ==== -->
+  <dependencyManagement>
+    <dependencies>
+      <!-- BOM de Resilience4j (gestiona todas las libs resilience4j-*) -->
+      <dependency>
+        <groupId>io.github.resilience4j</groupId>
+        <artifactId>resilience4j-bom</artifactId>
+        <version>2.2.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- (Opcional) BOM de HttpComponents5. Normalmente no es necesario con Boot 3.3,
+           pero si quieres fijar versiones, descomenta y quita versiones sueltas abajo.
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpcomponents-client5-bom</artifactId>
+        <version>5.3.1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      -->
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- Web / MVC -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- Validación (jakarta.validation) -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <!-- Actuator -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- HttpClient 5 (necesario para tu RestTemplateConfig) -->
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents.core5</groupId>
+      <artifactId>httpcore5</artifactId>
+    </dependency>
+
+    <!-- Resilience4j (gestionado por su BOM) -->
+    <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-spring-boot3</artifactId>
+    </dependency>
+
+    <!-- Lombok (opcional) -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Test -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Spring Boot repackage -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>com.mx.att.digital.identity.IdentityOrchestrationWebApplication</mainClass>
+          <layers>
+            <enabled>true</enabled>
+          </layers>
+        </configuration>
+      </plugin>
+
+      <!-- Compilador -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <release>${java.version}</release>
+          <parameters>true</parameters>
+        </configuration>
+      </plugin>
+
+      <!-- Surefire (JUnit 5) -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <useModulePath>false</useModulePath>
+        </configuration>
+      </plugin>
+
+      <!-- JaCoCo -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.12</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals><goal>prepare-agent</goal></goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals><goal>report</goal></goals>
+          </execution>
+          <execution>
+            <id>check</id>
+            <phase>verify</phase>
+            <goals><goal>check</goal></goals>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>BUNDLE</element>
+                  <limits>
+                    <limit>
+                      <counter>INSTRUCTION</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>${jacoco.minimum.coverage}</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Perfiles (ajusta valores según entorno) -->
+  <profiles>
+    <profile>
+      <id>local</id>
+      <properties>
+        <spring.profiles.active>local</spring.profiles.active>
+        <orchestrator.base-url>https://localhost:9443/orchestrator</orchestrator.base-url>
+        <orchestrator.security.type>basic</orchestrator.security.type>
+        <orchestrator.security.basic.username>admin</orchestrator.security.basic.username>
+        <orchestrator.security.basic.password>admin</orchestrator.security.basic.password>
+        <orchestrator.security.bearer.token></orchestrator.security.bearer.token>
+        <orchestrator.timeouts.connect-ms>3000</orchestrator.timeouts.connect-ms>
+        <orchestrator.timeouts.read-ms>5000</orchestrator.timeouts.read-ms>
+        <ssl.insecure-allow-all>true</ssl.insecure-allow-all>
+        <ssl.truststore.path></ssl.truststore.path>
+        <ssl.truststore.password></ssl.truststore.password>
+        <ssl.truststore.type>JKS</ssl.truststore.type>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>preprod</id>
+      <properties>
+        <spring.profiles.active>preprod</spring.profiles.active>
+        <orchestrator.base-url>https://coremgmtdev.pre-prod.mx.att.com/identity-orchestrator</orchestrator.base-url>
+        <orchestrator.security.type>basic</orchestrator.security.type>
+        <orchestrator.security.basic.username>${env.ORCH_USER}</orchestrator.security.basic.username>
+        <orchestrator.security.basic.password>${env.ORCH_PASS}</orchestrator.security.basic.password>
+        <orchestrator.security.bearer.token></orchestrator.security.bearer.token>
+        <orchestrator.timeouts.connect-ms>5000</orchestrator.timeouts.connect-ms>
+        <orchestrator.timeouts.read-ms>10000</orchestrator.timeouts.read-ms>
+        <ssl.insecure-allow-all>false</ssl.insecure-allow-all>
+        <ssl.truststore.path>file:${user.home}/truststores/att-truststore.jks</ssl.truststore.path>
+        <ssl.truststore.password>${env.TRUSTSTORE_PASSWORD}</ssl.truststore.password>
+        <ssl.truststore.type>JKS</ssl.truststore.type>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>prod</id>
+      <properties>
+        <spring.profiles.active>prod</spring.profiles.active>
+        <orchestrator.base-url>https://coremgmt.prod.mx.att.com/identity-orchestrator</orchestrator.base-url>
+        <orchestrator.security.type>basic</orchestrator.security.type>
+        <orchestrator.security.basic.username>${env.ORCH_USER}</orchestrator.security.basic.username>
+        <orchestrator.security.basic.password>${env.ORCH_PASS}</orchestrator.security.basic.password>
+        <orchestrator.security.bearer.token></orchestrator.security.bearer.token>
+        <orchestrator.timeouts.connect-ms>5000</orchestrator.timeouts.connect-ms>
+        <orchestrator.timeouts.read-ms>10000</orchestrator.timeouts.read-ms>
+        <ssl.insecure-allow-all>false</ssl.insecure-allow-all>
+        <ssl.truststore.path>file:/opt/app/truststores/att-truststore.jks</ssl.truststore.path>
+        <ssl.truststore.password>${env.TRUSTSTORE_PASSWORD}</ssl.truststore.password>
+        <ssl.truststore.type>JKS</ssl.truststore.type>
+      </properties>
+    </profile>
+  </profiles>
 </project>
