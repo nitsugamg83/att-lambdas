@@ -1,9 +1,67 @@
+server:
+  port: 8080
+
 spring:
   application:
-    name: ms-lambdas
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-server:
-  port: 8081
+    name: ms-identity-orchestration-web
+  main:
+    banner-mode: "console"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,loggers"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.mx.att.digital.identity: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg%n"
+
+orchestrator:
+  base-url: "https://{host}/{basePath}"
+  timeouts:
+    connect-ms: 3000
+    read-ms: 5000
+  security:
+    type: "none" # none|basic|bearer
+    basic:
+      username: ""
+      password: ""
+    bearer:
+      token: ""
+  headers:
+    Accept: "application/json"
+    Content-Type: "application/json"
+
+ssl:
+  truststore:
+    path: ""       # ej: file:/opt/certs/att-truststore.jks
+    password: ""   # ej: changeit
+    type: "JKS"
+  insecure-allow-all: false
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      orchestrator:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+  retry:
+    instances:
+      orchestrator:
+        maxAttempts: 2
+        waitDuration: 300ms
+  timelimiter:
+    instances:
+      orchestrator:
+        timeoutDuration: 6s
