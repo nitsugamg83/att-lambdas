@@ -25,27 +25,35 @@ logging:
     console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg%n"
 
 orchestrator:
-  base-url: "https://{host}/{basePath}"
+  base-url: "${ORCH_BASE_URL:https://localhost:9443/orchestrator}"
   timeouts:
-    connect-ms: 3000
-    read-ms: 5000
+    connect-ms: ${ORCH_CONNECT_MS:3000}
+    read-ms: ${ORCH_READ_MS:5000}
   security:
-    type: "none" # none|basic|bearer
+    type: "${ORCH_SECURITY_TYPE:none}"   # none|basic|bearer
     basic:
-      username: ""
-      password: ""
+      username: "${ORCH_USER:}"
+      password: "${ORCH_PASS:}"
     bearer:
-      token: ""
+      token: "${ORCH_BEARER_TOKEN:}"
   headers:
     Accept: "application/json"
     Content-Type: "application/json"
 
+aws:
+  region: "${AWS_REGION:mx-central-1}"
+  lambda:
+    arn: "${AWS_LAMBDA_FUNCTION_ARN:}"            # arn:aws:lambda:mx-central-1:XXXXXXXXXXXX:function:att-incode-lambda-start-session-web
+  # Solo para DEV local (en servidores usa IAM role / Secrets Manager)
+  accessKeyId: "${AWS_ACCESS_KEY_ID:}"
+  secretAccessKey: "${AWS_SECRET_ACCESS_KEY:}"
+
 ssl:
   truststore:
-    path: ""       # ej: file:/opt/certs/att-truststore.jks
-    password: ""   # ej: changeit
-    type: "JKS"
-  insecure-allow-all: false
+    path: "${SSL_TRUSTSTORE_PATH:}"      # ej: file:/opt/certs/att-truststore.jks
+    password: "${SSL_TRUSTSTORE_PASSWORD:}"
+    type: "${SSL_TRUSTSTORE_TYPE:JKS}"
+  insecure-allow-all: ${SSL_INSECURE_ALLOW_ALL:false}
 
 resilience4j:
   circuitbreaker:

@@ -1,0 +1,46 @@
+# === Maven / Build ===
+target/
+!.mvn/wrapper/maven-wrapper.jar
+dependency-reduced-pom.xml
+
+# === Java / Tools ===
+*.class
+*.log
+hs_err_pid*
+replay_pid*
+
+# === Build dirs generados ===
+**/generated-sources/
+
+# === IDEs ===
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.loadpath
+.vscode/
+.history/
+
+# === SO ===
+.DS_Store
+Thumbs.db
+
+# === Credenciales / secretos locales ===
+*.pem
+*.p12
+*.jks
+*.keystore
+*.crt
+*.key
+.env
+.env.*
+*.secret
+*.secrets
+*.credentials
+
+# === Otros binarios y caches comunes ===
+out/
+bin/
