@@ -7,7 +7,6 @@ import java.time.OffsetDateTime;
 
 public record OtpRequest(
     @NotBlank String uuid,
-    @NotBlank String sourceSystem,
     @Pattern(regexp = "\\d{10}") String msisdn,
     @NotNull OffsetDateTime timestamp
 ) {}
