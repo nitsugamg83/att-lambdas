@@ -9,5 +9,6 @@ public record MdnValidateRequest(
     @NotBlank String uuid,
     @NotNull OffsetDateTime timestamp,
     @NotBlank String source,
+    @NotBlank String initFlowType,
     @Pattern(regexp = "\\d{10}") String msisdn
 ) {}

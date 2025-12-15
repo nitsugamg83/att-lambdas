@@ -9,6 +9,5 @@ public record OtpValidateRequest(
     @NotBlank String uuid,
     @NotNull OffsetDateTime timestamp,
     @Pattern(regexp = "\\d{10}") String msisdn,
-    @NotBlank String sourceSystem,
-    @Pattern(regexp = "\\d{6}") String otpCode
+    @Pattern(regexp = "\\d{6}") String otp
 ) {}
