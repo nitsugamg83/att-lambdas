@@ -34,18 +34,18 @@ public class IdentityController {
 
   @Operation(
       summary = "Inicializa sesión",
-      description = "Crea una sesión de orquestación (por ejemplo, para flujos de verificación)."
+      description = "Crea una sesión de orquestación (por ejemplo, para flujos de verificación).",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "Sesión creada",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
   )
-  @io.swagger.v3.oas.annotations.responses.ApiResponses({
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(
-          responseCode = "200",
-          description = "Sesión creada",
-          content = @Content(schema = @Schema(implementation = ApiResponse.class))
-      ),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
-  })
   @io.swagger.v3.oas.annotations.parameters.RequestBody(
       required = true,
       content = @Content(schema = @Schema(implementation = SessionInitRequest.class))
@@ -57,18 +57,18 @@ public class IdentityController {
 
   @Operation(
       summary = "Valida MDN",
-      description = "Valida MSISDN/MDN dentro del flujo de identidad."
+      description = "Valida MSISDN/MDN dentro del flujo de identidad.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "Validación procesada",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
   )
-  @io.swagger.v3.oas.annotations.responses.ApiResponses({
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(
-          responseCode = "200",
-          description = "Validación procesada",
-          content = @Content(schema = @Schema(implementation = ApiResponse.class))
-      ),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
-  })
   @io.swagger.v3.oas.annotations.parameters.RequestBody(
       required = true,
       content = @Content(schema = @Schema(implementation = MdnValidateRequest.class))
@@ -80,18 +80,18 @@ public class IdentityController {
 
   @Operation(
       summary = "Solicita OTP",
-      description = "Genera y envía un OTP al canal configurado."
+      description = "Genera y envía un OTP al canal configurado.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "OTP solicitado",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
   )
-  @io.swagger.v3.oas.annotations.responses.ApiResponses({
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(
-          responseCode = "200",
-          description = "OTP solicitado",
-          content = @Content(schema = @Schema(implementation = ApiResponse.class))
-      ),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
-  })
   @io.swagger.v3.oas.annotations.parameters.RequestBody(
       required = true,
       content = @Content(schema = @Schema(implementation = OtpRequest.class))
@@ -103,18 +103,18 @@ public class IdentityController {
 
   @Operation(
       summary = "Valida OTP",
-      description = "Valida el código OTP recibido por el usuario."
+      description = "Valida el código OTP recibido por el usuario.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "OTP validado",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
   )
-  @io.swagger.v3.oas.annotations.responses.ApiResponses({
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(
-          responseCode = "200",
-          description = "OTP validado",
-          content = @Content(schema = @Schema(implementation = ApiResponse.class))
-      ),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
-  })
   @io.swagger.v3.oas.annotations.parameters.RequestBody(
       required = true,
       content = @Content(schema = @Schema(implementation = OtpValidateRequest.class))
@@ -126,18 +126,18 @@ public class IdentityController {
 
   @Operation(
       summary = "Reenvía OTP",
-      description = "Reenvía el OTP al usuario por el canal configurado."
+      description = "Reenvía el OTP al usuario por el canal configurado.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "OTP reenviado",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
   )
-  @io.swagger.v3.oas.annotations.responses.ApiResponses({
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(
-          responseCode = "200",
-          description = "OTP reenviado",
-          content = @Content(schema = @Schema(implementation = ApiResponse.class))
-      ),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
-      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
-  })
   @io.swagger.v3.oas.annotations.parameters.RequestBody(
       required = true,
       content = @Content(schema = @Schema(implementation = OtpForwardRequest.class))

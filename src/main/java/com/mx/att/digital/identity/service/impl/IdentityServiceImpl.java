@@ -27,7 +27,9 @@ public class IdentityServiceImpl implements IdentityService {
     @CircuitBreaker(name = "orchestrator")
     @Retry(name = "orchestrator")
     public ApiResponse<SessionInitData> sessionInit(SessionInitRequest req) {
-        log.info("[IdentityService] sessionInit uuid={}", safe(req.uuid()));
+        if (log.isInfoEnabled()) {
+            log.info("[IdentityService] sessionInit uuid={}", safe(req == null ? null : req.uuid()));
+        }
         return client.sessionInit(req);
     }
 
@@ -35,7 +37,12 @@ public class IdentityServiceImpl implements IdentityService {
     @CircuitBreaker(name = "orchestrator")
     @Retry(name = "orchestrator")
     public ApiResponse<MdnValidateData> mdnValidate(MdnValidateRequest req) {
-        log.info("[IdentityService] mdnValidate uuid={} msisdn={}", safe(req.uuid()), safe(req.msisdn()));
+        if (log.isInfoEnabled()) {
+            log.info("[IdentityService] mdnValidate uuid={} msisdn={}",
+                safe(req == null ? null : req.uuid()),
+                safe(req == null ? null : req.msisdn())
+            );
+        }
         return client.mdnValidate(req);
     }
 
@@ -43,7 +50,9 @@ public class IdentityServiceImpl implements IdentityService {
     @CircuitBreaker(name = "orchestrator")
     @Retry(name = "orchestrator")
     public ApiResponse<OtpRequestData> otpRequest(OtpRequest req) {
-        log.info("[IdentityService] otpRequest uuid={}", safe(req.uuid()));
+        if (log.isInfoEnabled()) {
+            log.info("[IdentityService] otpRequest uuid={}", safe(req == null ? null : req.uuid()));
+        }
         return client.otpRequest(req);
     }
 
@@ -51,7 +60,9 @@ public class IdentityServiceImpl implements IdentityService {
     @CircuitBreaker(name = "orchestrator")
     @Retry(name = "orchestrator")
     public ApiResponse<OtpValidateData> otpValidate(OtpValidateRequest req) {
-        log.info("[IdentityService] otpValidate uuid={}", safe(req.uuid()));
+        if (log.isInfoEnabled()) {
+            log.info("[IdentityService] otpValidate uuid={}", safe(req == null ? null : req.uuid()));
+        }
         return client.otpValidate(req);
     }
 
@@ -59,7 +70,9 @@ public class IdentityServiceImpl implements IdentityService {
     @CircuitBreaker(name = "orchestrator")
     @Retry(name = "orchestrator")
     public ApiResponse<OtpForwardData> otpForward(OtpForwardRequest req) {
-        log.info("[IdentityService] otpForward uuid={}", safe(req.uuid()));
+        if (log.isInfoEnabled()) {
+            log.info("[IdentityService] otpForward uuid={}", safe(req == null ? null : req.uuid()));
+        }
         return client.otpForward(req);
     }
 

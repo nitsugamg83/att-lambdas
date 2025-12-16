@@ -16,7 +16,6 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,10 +26,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResource(NoResourceFoundException ex) {
         // No “ensuciamos” logs con ERROR por favicon
-        if (ex.getMessage() != null && ex.getMessage().contains("favicon.ico")) {
-            log.debug("Static resource missing: {}", ex.getMessage());
+        String msg = ex.getMessage();
+        if (msg != null && msg.contains("favicon.ico")) {
+            log.debug("Static resource missing: {}", msg);
         } else {
-            log.info("Resource not found: {}", ex.getMessage());
+            log.info("Resource not found: {}", msg);
         }
         return build(HttpStatus.NOT_FOUND, "Resource not found", false, "RESOURCE_NOT_FOUND");
     }
@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .map(this::formatFieldError)
-                .collect(Collectors.toList());
+                .toList();
 
         String msg = errors.isEmpty() ? "Validation failed" : String.join("; ", errors);
         log.debug("Validation error: {}", msg);
@@ -75,12 +75,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpStatusCodeException.class)
     public ResponseEntity<ErrorResponse> handleHttpClient(HttpStatusCodeException ex) {
         HttpStatus status = HttpStatus.resolve(ex.getStatusCode().value());
-        String body = ex.getResponseBodyAsString();
-        String msg = "Upstream error (" + ex.getStatusCode().value() + "): " + (body != null ? body : ex.getMessage());
 
-        // 4xx: no reintentar; 5xx: dependiendo del caso se puede reintentar
+        String body = ex.getResponseBodyAsString();
+        String detail = body.isBlank() ? ex.getMessage() : body;
+        String msg = "Upstream error (" + ex.getStatusCode().value() + "): " + detail;
+
         boolean retryable = ex.getStatusCode().is5xxServerError();
         log.warn("HTTP client error. status={}, retryable={}, body={}", ex.getStatusCode(), retryable, body);
+
         return build(status != null ? status : HttpStatus.BAD_GATEWAY,
                 msg,
                 retryable,

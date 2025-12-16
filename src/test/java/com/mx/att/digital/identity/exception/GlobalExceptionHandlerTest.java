@@ -1,6 +1,5 @@
 package com.mx.att.digital.identity.exception;
 
-import com.mx.att.digital.identity.exception.GlobalExceptionHandler;
 import com.mx.att.digital.identity.model.ErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -145,7 +144,7 @@ class GlobalExceptionHandlerTest {
                 HttpServerErrorException.create(
                         HttpStatus.INTERNAL_SERVER_ERROR,
                         "Server Error",
-                           HttpHeaders.EMPTY,
+                        HttpHeaders.EMPTY,
                         "server error".getBytes(),
                         null
                 );

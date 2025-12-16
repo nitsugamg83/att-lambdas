@@ -69,23 +69,17 @@ public class OrchestratorClient {
 
   // ===== Implementación interna con AWS Lambda =====
 
-  private <TReq, TRes> ApiResponse<TRes> invoke(String operation, TReq requestBody,
-                                                TypeReference<ApiResponse<TRes>> typeRef) {
+  private <Q, R> ApiResponse<R> invoke(
+      String operation,
+      Q requestBody,
+      TypeReference<ApiResponse<R>> typeRef
+  ) {
     try {
-      // Construimos el payload esperado por tu Lambda:
-      // {
-      //   "operation": "<operation>",
-      //   "request":   <requestBody JSON>
-      // }
-      Map<String, Object> payload = new HashMap<>();
-      payload.put("operation", operation);
-      payload.put("request", requestBody);
-
-      String json = mapper.writeValueAsString(payload);
+      String json = buildPayloadJson(operation, requestBody);
 
       InvokeRequest invokeReq = InvokeRequest.builder()
           .functionName(functionArn)
-          .invocationType(invocationType) // "RequestResponse" o "Event"
+          .invocationType(invocationType)
           .logType(resolveLogType(logType))
           .payload(SdkBytes.fromString(json, StandardCharsets.UTF_8))
           .build();
@@ -94,46 +88,85 @@ public class OrchestratorClient {
 
       InvokeResponse resp = lambda.invoke(invokeReq);
 
-      // Log del runtime de Lambda (si Tail)
-      if (resp.logResult() != null && !resp.logResult().isEmpty()) {
-        String logsDecoded = new String(Base64.getDecoder().decode(resp.logResult()), StandardCharsets.UTF_8);
-        log.debug("[LAMBDA][logs]\n{}", logsDecoded);
-      }
+      logTailIfPresent(resp);
+      throwIfFunctionError(resp, operation);
 
-      if (resp.functionError() != null && !resp.functionError().isEmpty()) {
-        // La invocación llegó, pero la función lanzó error
-        String errPayload = (resp.payload() != null) ? resp.payload().asUtf8String() : "";
-        log.error("[LAMBDA] functionError={} statusCode={} payload={}", resp.functionError(), resp.statusCode(), errPayload);
-        throw new RuntimeException("Lambda function error: " + resp.functionError());
-      }
+      String body = extractBodyOrThrow(resp, operation);
 
-      String body = (resp.payload() != null) ? resp.payload().asUtf8String() : null;
-      if (body == null || body.isBlank()) {
-        log.error("[LAMBDA] Respuesta vacía de Lambda (statusCode={})", resp.statusCode());
-        throw new RuntimeException("Respuesta vacía de Lambda");
-      }
-
-      ApiResponse<TRes> parsed = mapper.readValue(body, typeRef);
+      ApiResponse<R> parsed = mapper.readValue(body, typeRef);
       if (parsed == null) {
-        throw new RuntimeException("No se pudo parsear la respuesta de Lambda");
+        throw new OrchestratorClientException("No se pudo parsear la respuesta de Lambda (op=" + operation + ")");
       }
-
       return parsed;
+
     } catch (LambdaException awsEx) {
-      log.error("[LAMBDA] Error AWS invoking function arn={} op={} code={} msg={}",
-          functionArn, operation,
-          awsEx.awsErrorDetails() != null ? awsEx.awsErrorDetails().errorCode() : "n/a",
-          awsEx.awsErrorDetails() != null ? awsEx.awsErrorDetails().errorMessage() : awsEx.getMessage(),
-          awsEx);
+      // S2139: NO log aquí si se re-lanza (evita doble log aguas arriba).
+      // Mantener contrato: se propaga LambdaException tal cual.
       throw awsEx;
+
+    } catch (OrchestratorClientException ex) {
+      // Ya trae contexto; NO log aquí (evita doble log).
+      throw ex;
+
     } catch (Exception ex) {
-      log.error("[LAMBDA] Error invocando op={} arn={}: {}", operation, functionArn, ex.getMessage(), ex);
-      throw new RuntimeException("Error invocando Lambda: " + ex.getMessage(), ex);
+      // S2139: NO log aquí si se envuelve; el contexto viaja en la excepción.
+      throw new OrchestratorClientException(
+          "Error invocando Lambda (op=" + operation + ", arn=" + functionArn + "): " + ex.getMessage(),
+          ex
+      );
     }
+  }
+
+  private String buildPayloadJson(String operation, Object requestBody) {
+    try {
+      Map<String, Object> payload = new HashMap<>();
+      payload.put("operation", operation);
+      payload.put("request", requestBody);
+      return mapper.writeValueAsString(payload);
+    } catch (Exception ex) {
+      throw new OrchestratorClientException(
+          "No se pudo serializar payload para Lambda (op=" + operation + ", arn=" + functionArn + "): " + ex.getMessage(),
+          ex
+      );
+    }
+  }
+
+  private void logTailIfPresent(InvokeResponse resp) {
+    String logResult = resp.logResult();
+    if (logResult != null && !logResult.isEmpty()) {
+      String logsDecoded = new String(Base64.getDecoder().decode(logResult), StandardCharsets.UTF_8);
+      log.debug("[LAMBDA][logs]\n{}", logsDecoded);
+    }
+  }
+
+  private void throwIfFunctionError(InvokeResponse resp, String operation) {
+    String functionError = resp.functionError();
+    if (functionError == null || functionError.isEmpty()) return;
+
+    String errPayload = resp.payload() != null ? resp.payload().asUtf8String() : "";
+    log.error("[LAMBDA] functionError={} statusCode={} op={} payload={}",
+        functionError, resp.statusCode(), operation, errPayload);
+
+    throw new OrchestratorClientException("Lambda function error: " + functionError + " (op=" + operation + ")");
+  }
+
+  private String extractBodyOrThrow(InvokeResponse resp, String operation) {
+    String body = resp.payload() != null ? resp.payload().asUtf8String() : null;
+    if (body == null || body.isBlank()) {
+      log.error("[LAMBDA] Respuesta vacía op={} statusCode={}", operation, resp.statusCode());
+      throw new OrchestratorClientException("Respuesta vacía de Lambda (op=" + operation + ")");
+    }
+    return body;
   }
 
   private LogType resolveLogType(String configured) {
     if ("Tail".equalsIgnoreCase(configured)) return LogType.TAIL;
     return LogType.NONE;
+  }
+
+  // Excepción específica (evita java:S112) sin romper firmas.
+  static class OrchestratorClientException extends RuntimeException {
+    OrchestratorClientException(String message) { super(message); }
+    OrchestratorClientException(String message, Throwable cause) { super(message, cause); }
   }
 }

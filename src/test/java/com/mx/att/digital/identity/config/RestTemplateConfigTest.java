@@ -122,7 +122,9 @@ class RestTemplateConfigTest {
     );
 
     // basic interceptor + headers interceptor
-    assertThat(rest.getInterceptors().size()).isGreaterThanOrEqualTo(2);
+    assertThat(rest.getInterceptors())
+    .hasSizeGreaterThanOrEqualTo(2);
+
 
     // el último debe ser el de default headers (según el orden del config)
     ClientHttpRequestInterceptor headersInterceptor = rest.getInterceptors().get(rest.getInterceptors().size() - 1);
