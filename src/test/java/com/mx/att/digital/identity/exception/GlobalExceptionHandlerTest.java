@@ -1,4 +1,4 @@
-package com.mx.att.digital.identity.controller.identity.exception;
+package com.mx.att.digital.identity.exception;
 
 import com.mx.att.digital.identity.exception.GlobalExceptionHandler;
 import com.mx.att.digital.identity.model.ErrorResponse;

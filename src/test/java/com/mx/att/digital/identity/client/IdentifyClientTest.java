@@ -1,4 +1,4 @@
-package com.mx.att.digital.identity.controller.identity.client;
+package com.mx.att.digital.identity.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mx.att.digital.identity.client.OrchestratorClient;

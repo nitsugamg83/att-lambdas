@@ -1,4 +1,4 @@
-package com.mx.att.digital.identity.controller.identity.config;
+package com.mx.att.digital.identity.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
