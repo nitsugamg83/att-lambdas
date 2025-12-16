@@ -22,92 +22,118 @@ public class IdentityController {
 
     private final IdentityService service;
 
-    public IdentityController(IdentityService service) {
-        this.service = service;
-    }
+  @Operation(
+      summary = "Inicializa sesión",
+      description = "Crea una sesión de orquestación (por ejemplo, para flujos de verificación).",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "Sesión creada",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
+  )
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      required = true,
+      content = @Content(schema = @Schema(implementation = SessionInitRequest.class))
+  )
+  @PostMapping(path = "/session/init", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ApiResponse<SessionInitData>> sessionInit(@Valid @RequestBody SessionInitRequest req) {
+    return ResponseEntity.ok(service.sessionInit(req));
+  }
 
-    @Operation(
-            summary = "Inicializa sesión",
-            description = "Crea una sesión de orquestación (por ejemplo, para flujos de verificación).",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Sesión creada",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-                    @ApiResponse(responseCode = "401", description = "No autorizado"),
-                    @ApiResponse(responseCode = "500", description = "Error interno")
-            }
-    )
-    @PostMapping(path = "/session/init", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<SessionInitData>> sessionInit(
-            @Valid @RequestBody SessionInitRequest req) {
-        return ResponseEntity.ok(service.sessionInit(req));
-    }
+  @Operation(
+      summary = "Valida MDN",
+      description = "Valida MSISDN/MDN dentro del flujo de identidad.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "Validación procesada",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
+  )
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      required = true,
+      content = @Content(schema = @Schema(implementation = MdnValidateRequest.class))
+  )
+  @PostMapping(path = "/mdn/validate", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ApiResponse<MdnValidateData>> mdnValidate(@Valid @RequestBody MdnValidateRequest req) {
+    return ResponseEntity.ok(service.mdnValidate(req));
+  }
 
-    @Operation(
-            summary = "Valida MDN",
-            description = "Valida MSISDN/MDN dentro del flujo de identidad.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Validación procesada",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-                    @ApiResponse(responseCode = "401", description = "No autorizado"),
-                    @ApiResponse(responseCode = "500", description = "Error interno")
-            }
-    )
-    @PostMapping(path = "/mdn/validate", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<MdnValidateData>> mdnValidate(
-            @Valid @RequestBody MdnValidateRequest req) {
-        return ResponseEntity.ok(service.mdnValidate(req));
-    }
+  @Operation(
+      summary = "Solicita OTP",
+      description = "Genera y envía un OTP al canal configurado.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "OTP solicitado",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
+  )
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      required = true,
+      content = @Content(schema = @Schema(implementation = OtpRequest.class))
+  )
+  @PostMapping(path = "/otp/request", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ApiResponse<OtpRequestData>> otpRequest(@Valid @RequestBody OtpRequest req) {
+    return ResponseEntity.ok(service.otpRequest(req));
+  }
 
-    @Operation(
-            summary = "Solicita OTP",
-            description = "Genera y envía un OTP al canal configurado.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OTP solicitado",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-                    @ApiResponse(responseCode = "401", description = "No autorizado"),
-                    @ApiResponse(responseCode = "500", description = "Error interno")
-            }
-    )
-    @PostMapping(path = "/otp/request", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<OtpRequestData>> otpRequest(
-            @Valid @RequestBody OtpRequest req) {
-        return ResponseEntity.ok(service.otpRequest(req));
-    }
+  @Operation(
+      summary = "Valida OTP",
+      description = "Valida el código OTP recibido por el usuario.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "OTP validado",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
+  )
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      required = true,
+      content = @Content(schema = @Schema(implementation = OtpValidateRequest.class))
+  )
+  @PostMapping(path = "/otp/validate", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ApiResponse<OtpValidateData>> otpValidate(@Valid @RequestBody OtpValidateRequest req) {
+    return ResponseEntity.ok(service.otpValidate(req));
+  }
 
-    @Operation(
-            summary = "Valida OTP",
-            description = "Valida el código OTP recibido por el usuario.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OTP validado",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-                    @ApiResponse(responseCode = "401", description = "No autorizado"),
-                    @ApiResponse(responseCode = "500", description = "Error interno")
-            }
-    )
-    @PostMapping(path = "/otp/validate", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<OtpValidateData>> otpValidate(
-            @Valid @RequestBody OtpValidateRequest req) {
-        return ResponseEntity.ok(service.otpValidate(req));
-    }
-
-    @Operation(
-            summary = "Reenvía OTP",
-            description = "Reenvía el OTP al usuario por el canal configurado.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "OTP reenviado",
-                            content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-                    @ApiResponse(responseCode = "401", description = "No autorizado"),
-                    @ApiResponse(responseCode = "500", description = "Error interno")
-            }
-    )
-    @PostMapping(path = "/otp/forward", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse<OtpForwardData>> otpForward(
-            @Valid @RequestBody OtpForwardRequest req) {
-        return ResponseEntity.ok(service.otpForward(req));
-    }
+  @Operation(
+      summary = "Reenvía OTP",
+      description = "Reenvía el OTP al usuario por el canal configurado.",
+      responses = {
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(
+              responseCode = "200",
+              description = "OTP reenviado",
+              content = @Content(schema = @Schema(implementation = ApiResponse.class))
+          ),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "No autorizado"),
+          @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno")
+      }
+  )
+  @io.swagger.v3.oas.annotations.parameters.RequestBody(
+      required = true,
+      content = @Content(schema = @Schema(implementation = OtpForwardRequest.class))
+  )
+  @PostMapping(path = "/otp/forward", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ApiResponse<OtpForwardData>> otpForward(@Valid @RequestBody OtpForwardRequest req) {
+    return ResponseEntity.ok(service.otpForward(req));
+  }
 }
