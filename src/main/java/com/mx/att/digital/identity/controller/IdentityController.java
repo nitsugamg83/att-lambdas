@@ -2,14 +2,23 @@ package com.mx.att.digital.identity.controller;
 
 import jakarta.validation.Valid;
 
-import com.mx.att.digital.identity.model.*;
+import com.mx.att.digital.identity.model.ApiResponse;
+import com.mx.att.digital.identity.model.MdnValidateData;
+import com.mx.att.digital.identity.model.MdnValidateRequest;
+import com.mx.att.digital.identity.model.OtpForwardData;
+import com.mx.att.digital.identity.model.OtpForwardRequest;
+import com.mx.att.digital.identity.model.OtpRequest;
+import com.mx.att.digital.identity.model.OtpRequestData;
+import com.mx.att.digital.identity.model.OtpValidateData;
+import com.mx.att.digital.identity.model.OtpValidateRequest;
+import com.mx.att.digital.identity.model.SessionInitData;
+import com.mx.att.digital.identity.model.SessionInitRequest;
 import com.mx.att.digital.identity.service.IdentityService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +29,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 public class IdentityController {
 
-    private final IdentityService service;
+  private final IdentityService service;
+  public IdentityController(IdentityService service) { this.service = service; }
 
   @Operation(
       summary = "Inicializa sesión",
