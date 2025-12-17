@@ -112,6 +112,15 @@
             <enabled>true</enabled>
           </layers>
         </configuration>
+        <!-- ✅ Esto es lo que te faltaba: hace el jar ejecutable (manifest + BOOT-INF) -->
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

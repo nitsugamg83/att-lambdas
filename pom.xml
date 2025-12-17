@@ -84,10 +84,11 @@
           </configuration>
         </plugin>
 
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
+        <!-- ❌ QUITADO: spring-boot-maven-plugin con skip=true
+             Porque se hereda al módulo boot y evita:
+             - spring-boot:run
+             - repackage (jar ejecutable)
+        -->
       </plugins>
     </pluginManagement>
   </build>

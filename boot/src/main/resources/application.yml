@@ -1,0 +1,79 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ms-identity-orchestration-web
+  main:
+    banner-mode: "console"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,loggers"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.mx.att.digital.identity: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg%n"
+
+orchestrator:
+  base-url: "${ORCH_BASE_URL:https://localhost:9443/orchestrator}"
+  timeouts:
+    connect-ms: ${ORCH_CONNECT_MS:3000}
+    read-ms: ${ORCH_READ_MS:5000}
+  security:
+    type: "${ORCH_SECURITY_TYPE:none}"   # none|basic|bearer
+    basic:
+      username: "${ORCH_USER:}"
+      password: "${ORCH_PASS:}"
+    bearer:
+      token: "${ORCH_BEARER_TOKEN:}"
+  headers:
+    Accept: "application/json"
+    Content-Type: "application/json"
+
+aws:
+  region: "${AWS_REGION:mx-central-1}"
+  credentials:
+    provider: "static"
+    access-key: "${AWS_ACCESS_KEY_ID:}"
+    secret-key: "${AWS_SECRET_ACCESS_KEY:}"
+  lambda:
+    function-arn: "${AWS_LAMBDA_FUNCTION_ARN:}"
+    endpoint-override: ""
+
+
+
+ssl:
+  truststore:
+    path: "${SSL_TRUSTSTORE_PATH:}"      # ej: file:/opt/certs/att-truststore.jks
+    password: "${SSL_TRUSTSTORE_PASSWORD:}"
+    type: "${SSL_TRUSTSTORE_TYPE:JKS}"
+  insecure-allow-all: ${SSL_INSECURE_ALLOW_ALL:false}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      orchestrator:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+  retry:
+    instances:
+      orchestrator:
+        maxAttempts: 2
+        waitDuration: 300ms
+  timelimiter:
+    instances:
+      orchestrator:
+        timeoutDuration: 6s

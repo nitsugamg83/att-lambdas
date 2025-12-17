@@ -34,7 +34,7 @@ public class OrchestratorClient {
   public OrchestratorClient(
       LambdaClient lambda,
       ObjectMapper mapper,
-      @Value("${aws.lambda.function-arn}") String functionArn,
+      @Value("${aws.lambda.arn:}") String functionArn,
       @Value("${aws.lambda.invocation-type:RequestResponse}") String invocationType,
       @Value("${aws.lambda.log-type:Tail}") String logType
   ) {
